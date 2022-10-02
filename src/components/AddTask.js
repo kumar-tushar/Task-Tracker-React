@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState} from "react"
 
 const AddTask = ({onAdd}) => {
     const [text, setText]=useState('')
@@ -35,7 +35,6 @@ const AddTask = ({onAdd}) => {
                 <input type="checkbox" checked={reminder} value={reminder} onChange={(e)=>setReminder(e.currentTarget.checked)}/>
             </div>
             <input className="btn btn-block" type="submit" value="Save Task"/>
-
         </form>
     )
 }
