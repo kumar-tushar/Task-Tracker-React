@@ -5,6 +5,7 @@ import Tasks from "./components/Tasks"
 import AddTask from "./components/AddTask"
 import Footer from "./components/Footer"
 import About from "./components/About"
+import api from "./api/tasks"
 
 const App = () => {
 
@@ -21,29 +22,25 @@ const App = () => {
     },[])
 
     const fetchTasks=async ()=>{
-        const res=await fetch(`http://localhost:5000/tasks`)
-        return await res.json()
+        const res=await api.get("/tasks")
+        return res.data
     }
 
     const fetchTask=async (id)=>{
-        const res=await fetch(`http://localhost:5000/tasks/${id}`)
-        return await res.json()
+        const res=await api.get(`/tasks/${id}`)
+        return  res.data
     }
 
     const addTask= async (task)=>{
-        const res=await fetch(`http://localhost:5000/tasks`,
-            {method: 'POST',
-                headers: {'Content-type':'application/json'},
-                body: JSON.stringify(task)
-            })
+        const res=await api.post(`/tasks`, task)
 
-        const data= await res.json()
+        const data= res.data
 
         setTasks([...tasks, data])
     }
 
     const deleteTask= async (id)=>{
-        await fetch (`http://localhost:5000/tasks/${id}`,{method: 'DELETE'})
+        await api.delete(`/tasks/${id}`)
         setTasks(tasks.filter((task)=>task.id!==id))
     }
 
@@ -51,13 +48,9 @@ const App = () => {
         const taskToToggle=await fetchTask(id)
         const updTask={...taskToToggle, reminder: !taskToToggle.reminder}
 
-        const res=await fetch(`http://localhost:5000/tasks/${id}`,
-            {method: 'PUT',
-                headers: {'Content-type':'application/json'},
-                body: JSON.stringify(updTask)
-            })
+        const res=await api.put(`/tasks/${id}`, updTask)
 
-        const data= await res.json()
+        const data= res.data
 
         setTasks(tasks.map((task)=> task.id===id?{...task, reminder: data.reminder} : task))
     }
